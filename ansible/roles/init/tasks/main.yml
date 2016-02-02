@@ -6,3 +6,13 @@
 - name: change timezone to Asia/Tokyo
   become: yes
   file: src=/usr/share/zoneinfo/Asia/Tokyo dest=/etc/localtime state=link force=true
+
+- name: install emacs
+  become: yes
+  yum: name=emacs state=installed
+
+- name: copy .emacs.d
+  become: yes
+  copy: src=~/.emacs.d dest=~vagrant/ owner=vagrant group=vagrant
+  
+  

@@ -1,0 +1,31 @@
+- name: incled variables for mariadb
+  include_vars: "mariadb.yml"
+  
+- name: Install MariaDB Packages
+  become: true
+  yum: name={{ item }} state=latest
+  with_items:
+      - mariadb
+      - mariadb-server
+      - MySQL-python
+
+- name: Set autoload mariadb
+  become: true
+  command: systemctl enable mariadb
+
+- name: restart mariadb
+  become: true
+  command: systemctl restart mariadb
+
+- name: change root password
+  become: true
+  mysql_user: name=root host={{ item }} password={{ db_root_password }}
+  with_items:
+      - 127.0.0.1
+      - localhost
+
+- name: create root .my.cnf
+  become: true
+  template: src={{ my_cnf_template }}  dest=/root/.my.conf owner=root mode=0600
+
+  

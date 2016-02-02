@@ -1,0 +1,31 @@
+- name: Install PHP Packages
+  become: true
+  yum: name={{ item }} state=latest
+  with_items:
+      - php
+      - php-devel
+      - php-fpm
+      - php-xml
+      - php-mysql
+      - php-mbstring
+      - php-gd
+
+- name: update php.ini for cli
+  lineinfile: dest=/etc/php.ini
+              regexp=';date.timezone ='
+              line='date.timezone = Asia/Tokyo'
+
+- name: Set user to nginx
+  lineinfile: "dest=/etc/php-fpm.d/www.conf state=present regexp='^user = apache' line='user = nginx'"
+
+- name: Set group to nginx
+  lineinfile: "dest=/etc/php-fpm.d/www.conf state=present regexp='^group = apache' line='group = nginx'"
+
+- name: Set autoload php-fpm
+  become: true
+  command: systemctl enable php-fpm
+
+- name: restart php-fpm
+  become: true
+  command: systemctl restart php-fpm
+  

@@ -1,0 +1,19 @@
+- name: incled variables for nginx
+  include_vars: "nginx.yml"
+
+- name: Install Nginx
+  become: yes
+  yum: name=nginx state=latest
+
+- name: Set default nginx site
+  become: yes
+  template: src={{ template }} dest={{ vhost_path }}/{{ vhost_file }}
+  
+- name: Set autoload nginx
+  become: true
+  command: systemctl enable nginx
+
+- name: restart nginx
+  become: true
+  command: systemctl restart nginx
+  

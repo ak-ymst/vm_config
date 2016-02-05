@@ -13,6 +13,8 @@ Vagrant.configure("2") do |config|
     config.vm.network :private_network, ip: "192.168.33.100"
     config.ssh.forward_agent = true
 
+    config.vm.synced_folder "share/", "/vagrant"
+
     # Ansible provisioning
     config.vm.provision "ansible" do |ansible|
         ansible.playbook = "ansible/playbook.yml"

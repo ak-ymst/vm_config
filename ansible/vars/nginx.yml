@@ -2,5 +2,5 @@ vhost_path: /etc/nginx/conf.d
 vhost_file: default.conf
 template: default.j2
 
-server_name: 192.168.33.100
+server_name: 192.168.56.100
 document_root: /vagrant

@@ -1,18 +1,43 @@
 ---
+- name: update curl
+  become: yes
+  yum: name={{ item }} state=latest
+  with_items:
+      - nss
+      - curl
+      - libcurl
+  
 - name: yum update
   become: yes
   yum: name=* state=latest
+
+- name: add epel repos
+  become: yes
+  yum: name=epel-release state=installed
+
+- name: check remi repos
+  stat: path=/etc/yum/repos.d/remi-php70.repo
+  register: remi_release_7
+
+- name: add remi repos
+  yum:
+    name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    state: latest
+  when: remi_release.state.exists == false    
 
 - name: change timezone to Asia/Tokyo
   become: yes
   file: src=/usr/share/zoneinfo/Asia/Tokyo dest=/etc/localtime state=link force=true
 
-- name: install emacs
+- name: install develop tools
   become: yes
-  yum: name=emacs state=installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - git
+    - emacs
 
 - name: copy .emacs.d
   become: yes
   copy: src=~/.emacs.d dest=~vagrant/ owner=vagrant group=vagrant
-  
+
   
